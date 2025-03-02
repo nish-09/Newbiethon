@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Scrapbook</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Autumn+in+November&display=swap');
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url("https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcm00NTItZi0wMTJhXzEuanBn.jpg");
+            background-repeat: repeat;
+            background-size: contain;
+            text-align: center;
+        }
+        .header {
+            font-size: 3em;
+            font-family: 'Lucida Handwriting', cursive;
+            font-weight: bold;
+            font-style: italic;
+            margin: 20px 0;
+            color: black;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .container {
+            margin-top: 50px;
+            width: 90%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.3); /* Faded white background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .memory-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .memory-container img {
+            max-width: 200px;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
+        .memory-container p {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+        .drop-zone {
+            width: 90%;
+            max-width: 560px;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            margin: 20px auto;
+        }
+        .drop-zone:hover {
+            background-color: #f0f0f0;
+            opacity: 0.4;
+        }
+        .text-input {
+            background: rgba(255, 255, 255, 0.2);
+            margin-top: 10px;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .save-button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .save-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Memory Scrapbook</div>
+    <div class="container">
+        <div class="drop-zone" id="dropZone">Drag & Drop Image Here or Click to Upload</div>
+        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+        <input type="date" id="memoryDate" class="text-input">
+        <select id="memoryMood" class="text-input">
+            <option value="happy">Happy</option>
+            <option value="sad">Sad</option>
+            <option value="excited">Excited</option>
+            <option value="nostalgic">Nostalgic</option>
+            <option value="romantic">Romantic</option>
+            <option value="funny">Funny</option>
+        </select>
+        <input type="text" id="memoryInput" class="text-input" placeholder="Enter your memory...">
+        <button class="save-button" id="saveMemory">Save Memory</button>
+        <div id="memoryDisplay" class="memory-container" style="display: none;">
+            <img id="imagePreview">
+            <p id="memoryText"></p>
+        </div>
+    </div>
+    
+    <script>
+        const dropZone = document.getElementById("dropZone");
+        const fileInput = document.getElementById("fileInput");
+        const imagePreview = document.getElementById("imagePreview");
+        const memoryInput = document.getElementById("memoryInput");
+        const saveMemory = document.getElementById("saveMemory");
+        const memoryDisplay = document.getElementById("memoryDisplay");
+        const memoryText = document.getElementById("memoryText");
+
+        dropZone.addEventListener("click", () => fileInput.click());
+        dropZone.addEventListener("dragover", (event) => {
+            event.preventDefault();
+            dropZone.style.backgroundColor = "#f0f0f0";
+        });
+        dropZone.addEventListener("dragleave", () => {
+            dropZone.style.backgroundColor = "white";
+        });
+        dropZone.addEventListener("drop", (event) => {
+            event.preventDefault();
+            dropZone.style.backgroundColor = "white";
+            handleFiles(event.dataTransfer.files);
+        });
+        fileInput.addEventListener("change", () => handleFiles(fileInput.files));
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                const file = files[0];
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imagePreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        saveMemory.addEventListener("click", () => {
+            if (imagePreview.src && memoryInput.value.trim() !== "") {
+                memoryText.textContent = memoryInput.value;
+                memoryDisplay.style.display = "flex";
+                document.querySelector(".drop-zone").style.display = "none";
+                fileInput.style.display = "none";
+                memoryInput.style.display = "none";
+                saveMemory.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>
